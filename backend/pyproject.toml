@@ -1,0 +1,54 @@
+[tool.poetry]
+name = "backend"
+version = "0.1.0"
+description = ""
+authors = ["Eric <rozanov7475@yandex.by>"]
+readme = "README.md"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.12"
+fastapi = "^0.112.2"
+uvicorn = "^0.30.6"
+pydantic = "^2.8.2"
+pydantic-settings = "^2.4.0"
+sqlalchemy = "^2.0.33"
+asyncpg = "^0.29.0"
+alembic = "^1.13.2"
+httpx = "^0.27.2"
+python-dotenv = "^1.0.1"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.2"
+pytest-asyncio = "^0.23.8"
+poethepoet = "^0.27.0"
+mypy = "^1.11.1"
+flake8 = "^7.1.1"
+black = "^24.8.0"
+
+[tool.poe.tasks]
+start            = "uvicorn --factory main:create_app --reload --port 8080 --host 0.0.0.0"
+makemigrations   = "alembic revision --autogenerate"
+migrate          = "alembic upgrade head"
+
+
+[tool.pytest.ini_options]
+python_files = ["tests.py", "test_*.py", "*_tests.py"]
+addopts = ["-rsxX", "-l", "--tb=short", "--strict-markers", "-s"]
+xfail_strict = true
+asyncio_mode = "auto"
+markers = [
+    "unit: marks test as unit test i.e. not using any external services",
+    "integration: marks tests as integration i.e. using a database",
+    "e2e: marks tests as e2e tests i.e. using a client api and a database",
+    "marked: marks test for execution as any test type"
+]
+cache_dir = ".venv/cache/pytest"
+
+[tool.black]
+line-length = 79
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
