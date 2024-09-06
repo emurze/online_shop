@@ -1,0 +1,46 @@
+<mxfile host="Electron" modified="2024-09-04T15:40:00.885Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.6.4 Chrome/124.0.6367.207 Electron/30.0.6 Safari/537.36" etag="yi8wxiH568oe-HzEPsOR" version="24.6.4" type="device">
+  <diagram name="Page-1" id="w55-_ggkYQb_spVYyirn">
+    <mxGraphModel dx="1195" dy="698" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="Y76ClUf_XcHLHXQBz8Ol-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="Y76ClUf_XcHLHXQBz8Ol-1" target="Y76ClUf_XcHLHXQBz8Ol-2" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Y76ClUf_XcHLHXQBz8Ol-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="Y76ClUf_XcHLHXQBz8Ol-1" target="Y76ClUf_XcHLHXQBz8Ol-3" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Y76ClUf_XcHLHXQBz8Ol-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="Y76ClUf_XcHLHXQBz8Ol-1" target="Y76ClUf_XcHLHXQBz8Ol-4" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Y76ClUf_XcHLHXQBz8Ol-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="Y76ClUf_XcHLHXQBz8Ol-1" target="Y76ClUf_XcHLHXQBz8Ol-6" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Y76ClUf_XcHLHXQBz8Ol-1" value="Client" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;" parent="1" vertex="1">
+          <mxGeometry x="130" y="320" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Y76ClUf_XcHLHXQBz8Ol-2" value="Add&lt;span style=&quot;background-color: initial;&quot;&gt;&amp;nbsp;a habit&lt;/span&gt;" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="250" y="140" width="150" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="Y76ClUf_XcHLHXQBz8Ol-3" value="Delete a habit" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="250" y="250" width="150" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="Y76ClUf_XcHLHXQBz8Ol-4" value="Mark a habit to do today" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="250" y="354" width="150" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="Y76ClUf_XcHLHXQBz8Ol-6" value="List habits" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="250" y="452" width="150" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="Y76ClUf_XcHLHXQBz8Ol-7" value="List one habit" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="250" y="550" width="150" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="Y76ClUf_XcHLHXQBz8Ol-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.607;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="Y76ClUf_XcHLHXQBz8Ol-1" target="Y76ClUf_XcHLHXQBz8Ol-7" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Y76ClUf_XcHLHXQBz8Ol-14" value="Habit tracker" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;" parent="1" vertex="1">
+          <mxGeometry x="80" y="90" width="410" height="570" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
