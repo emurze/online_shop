@@ -26,19 +26,19 @@ services:
     restart: unless-stopped
 
   api:
-    build: backend
+    build: .
     container_name: api
     image: api:2
-    env_file: backend/.env
+    env_file: .env
     networks:
       - frontend
       - backend
     ports:
       - '8080:8080'
     volumes:
-      - ./backend/src:/service/src
-      - ./backend/tests:/service/tests
-      - ./backend/migrations:/service/migrations
+      - ./src:/service/src
+      - ./tests:/service/tests
+      - ./migrations:/service/migrations
       - app_static:/service/static
       - app_media:/service/media
     restart: unless-stopped

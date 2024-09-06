@@ -17,6 +17,10 @@ asyncpg = "^0.29.0"
 alembic = "^1.13.2"
 httpx = "^0.27.2"
 python-dotenv = "^1.0.1"
+fastapi-users = {extras = ["redis"], version = "^13.0.0"}
+redis = "^5.0.8"
+aiofiles = "22.1.0"
+fastapi-users-db-sqlalchemy = "^6.0.1"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.2"
@@ -26,10 +30,18 @@ mypy = "^1.11.1"
 flake8 = "^7.1.1"
 black = "^24.8.0"
 
+[tool.poe.env]
+PYTHONPATH       = "src"
+APP_CONTAINER    = "api"
+DB_CONTAINER     = "db"
+DC               = "docker compose -f docker-compose.dev.yml"
+EXEC             = "docker exec -it"
+
 [tool.poe.tasks]
 start            = "uvicorn --factory main:create_app --reload --port 8080 --host 0.0.0.0"
 makemigrations   = "alembic revision --autogenerate"
 migrate          = "alembic upgrade head"
+up               = "docker compose up --build"
 
 
 [tool.pytest.ini_options]

@@ -50,3 +50,7 @@ class AppConfig(BaseSettings):
     pool_max_overflow: int = 0
     db_echo: bool = False
     db_dsn: str = "postgresql+asyncpg://postgres:password@db:5432/postgres"
+    redis_dsn: str = "redis://db:6379/0"
+
+
+config = AppConfig()  # global

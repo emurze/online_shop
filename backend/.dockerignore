@@ -1,6 +1,6 @@
 # Git
 .git
-backend/.gitignore
+.gitignore
 .gitattributes
 
 
