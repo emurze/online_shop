@@ -30,7 +30,7 @@ async def get_pizza_or_404(
 
 
 @router.get(
-    "/",
+    "",
     status_code=status.HTTP_200_OK,
     response_model=list[PizzaRead],
 )
@@ -39,7 +39,7 @@ async def get_pizzas(session: AsyncSession = Depends(get_session)):
 
 
 @router.get(
-    "/{pizzas_id}/",
+    "/{pizzas_id}",
     status_code=status.HTTP_200_OK,
     response_model=PizzaRead,
     responses={
@@ -57,7 +57,7 @@ async def get_pizza_by_id(
 
 
 @router.get(
-    "/latest/",
+    "/latest",
     status_code=status.HTTP_200_OK,
     response_model=PizzaRead,
     responses={
@@ -75,7 +75,7 @@ async def get_latest_pizza(db_session: AsyncSession = Depends(get_session)):
 
 
 @router.post(
-    "/",
+    "",
     status_code=status.HTTP_201_CREATED,
     response_model=PizzaRead,
 )
@@ -89,7 +89,7 @@ async def create_pizza(
 
 
 @router.patch(
-    "/{pizza_id}/",
+    "/{pizza_id}",
     status_code=status.HTTP_200_OK,
     response_model=PizzaRead,
     responses={
@@ -111,7 +111,7 @@ async def update_pizza(
 
 
 @router.delete(
-    "/{pizza_id}/",
+    "/{pizza_id}",
     status_code=status.HTTP_204_NO_CONTENT,
 )
 async def delete_pizza(
