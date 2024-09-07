@@ -11,7 +11,7 @@ from sqlalchemy.ext.asyncio import (
 
 from config import AppConfig
 from main import create_app
-from shared.db import Model
+from shared.db import Base
 
 
 @pytest.fixture(scope="function")
@@ -27,8 +27,8 @@ async def engine(config: AppConfig) -> AsyncEngine:
     eng = create_async_engine(config.db_dsn, poolclass=NullPool)
 
     async with eng.begin() as conn:
-        await conn.run_sync(Model.metadata.drop_all)
-        await conn.run_sync(Model.metadata.create_all)
+        await conn.run_sync(Base.metadata.drop_all)
+        await conn.run_sync(Base.metadata.create_all)
         await conn.commit()
         yield eng
 

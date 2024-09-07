@@ -1,0 +1,2 @@
+class PizzaNotFoundException(Exception):
+    pass

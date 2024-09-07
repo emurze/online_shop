@@ -1,4 +1,4 @@
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, condecimal
 
 
 class Schema(BaseModel):
@@ -10,3 +10,6 @@ class Schema(BaseModel):
 
 class ErrorSchema(Schema):
     error: str
+
+
+PydanticMoney = condecimal(max_digits=10, decimal_places=2)

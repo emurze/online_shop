@@ -1,4 +1,3 @@
-import os
 from logging.config import fileConfig
 
 from sqlalchemy import engine_from_config
@@ -6,22 +5,13 @@ from sqlalchemy import pool
 
 from alembic import context
 
-from config import AppConfig
+from config import get_db_dsn_for_environment
 from main import create_app
 from shared.db import Base
 
 
 def populate_db_by_models() -> None:
     create_app()
-
-
-def get_db_dsn() -> str:
-    _config = AppConfig()
-
-    if os.getenv("IS_DOCKER_CONTAINER"):
-        return _config.db_dsn
-
-    return _config.db_dsn.replace("db", "localhost")
 
 
 # this is the Alembic Config object, which provides
@@ -33,7 +23,7 @@ config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-db_dsn = get_db_dsn()
+db_dsn = get_db_dsn_for_environment()
 config.set_main_option("sqlalchemy.url", db_dsn + "?async_fallback=True")
 
 populate_db_by_models()

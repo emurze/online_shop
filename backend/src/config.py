@@ -1,4 +1,5 @@
 import logging
+import os
 from enum import Enum
 
 from pydantic import SecretStr
@@ -34,6 +35,7 @@ class AppConfig(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", extra="allow")
 
     # FastAPI
+    api_v1_prefix: str = "/api/v1"
     app_title: str = "App"
     allowed_origins: list[str] = [
         "http://localhost:3000",
@@ -51,6 +53,18 @@ class AppConfig(BaseSettings):
     db_echo: bool = False
     db_dsn: str = "postgresql+asyncpg://postgres:password@db:5432/postgres"
     redis_dsn: str = "redis://db:6379/0"
+
+
+def get_db_dsn_for_environment(app_config = AppConfig()) -> str:
+    """
+    Get database url for entrypoint inside docker container or localhost.
+    Allows you to run your commands outside container.
+    """
+
+    if os.getenv("IS_DOCKER_CONTAINER"):
+        return app_config.db_dsn
+
+    return app_config.db_dsn.replace("db", "localhost")
 
 
 config = AppConfig()  # global
