@@ -2,25 +2,32 @@ import uuid
 from typing import Optional
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Query, Depends, HTTPException, Body
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
 
 from api_v1.pizzas import services
+from api_v1.pizzas.api.categories import category_router
+from api_v1.pizzas.api.sizes import size_router
+from api_v1.pizzas.api.types import type_router
 from api_v1.pizzas.exceptions import (
     PizzaNotFoundException,
-    PizzaUserOrCategoryNotFoundException,
+    PizzaCategoryNotFoundException,
+    PizzaUserNotFoundException,
 )
 from api_v1.pizzas.schemas import (
-    PizzaRead,
-    PizzaCreate,
-    PizzaPartialUpdate,
     PizzaPageRead,
+    PizzaRead,
+    PizzaPartialUpdate,
+    PizzaCreate,
 )
 from shared.db import get_session
 from shared.schemas import ErrorSchema
 
 router = APIRouter(prefix="/pizzas", tags=["pizzas"])
+router.include_router(size_router)
+router.include_router(type_router)
+router.include_router(category_router)
 
 
 async def get_pizza_or_404(
@@ -71,30 +78,23 @@ async def get_pizzas(
 
 
 @router.get(
-    "/sizes",
+    "/latest",
     status_code=status.HTTP_200_OK,
-    response_model=list[int],
+    response_model=PizzaRead,
+    responses={
+        status.HTTP_404_NOT_FOUND: {
+            "model": ErrorSchema,
+        }
+    },
 )
-async def get_pizza_categories(session: AsyncSession = Depends(get_session)):
-    return await services.get_pizza_sizes(session)
-
-
-@router.get(
-    "/types",
-    status_code=status.HTTP_200_OK,
-    response_model=list[str],
-)
-async def get_pizza_types(session: AsyncSession = Depends(get_session)):
-    return await services.get_pizza_types(session)
-
-
-@router.get(
-    "/categories",
-    status_code=status.HTTP_200_OK,
-    response_model=list[str],
-)
-async def get_pizza_categories(session: AsyncSession = Depends(get_session)):
-    return await services.get_pizza_categories(session)
+async def get_latest_pizza(db_session: AsyncSession = Depends(get_session)):
+    try:
+        return await services.get_latest_pizza(db_session)
+    except PizzaNotFoundException:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Pizza not found",
+        )
 
 
 @router.get(
@@ -114,24 +114,57 @@ async def get_pizza_by_id(
     return await get_pizza_or_404(session, pizza_id)
 
 
-@router.get(
-    "/latest",
+@router.post(
+    "/{pizza_id}/sizes",
     status_code=status.HTTP_200_OK,
     response_model=PizzaRead,
-    responses={
-        status.HTTP_404_NOT_FOUND: {
-            "model": ErrorSchema,
-        }
-    },
 )
-async def get_latest_pizza(db_session: AsyncSession = Depends(get_session)):
-    try:
-        return await services.get_latest_pizza(db_session)
-    except PizzaNotFoundException:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Pizza not found",
-        )
+async def add_size_to_pizza(
+    pizza_id: UUID,
+    size: int = Body(),
+    session: AsyncSession = Depends(get_session),
+):
+    await services.add_size_to_pizza(pizza_id, size, session)
+    return await services.get_pizza_by_id(session, pizza_id)
+
+
+@router.delete(
+    "/{pizza_id}/types",
+    status_code=status.HTTP_200_OK,
+    response_model=PizzaRead,
+)
+async def delete_size_from_pizza(
+    pizza_id: UUID,
+    type: int = Body(),  # noqa
+    session: AsyncSession = Depends(get_session),
+):
+    pass
+
+
+@router.post(
+    "/{pizza_id}/types",
+    status_code=status.HTTP_200_OK,
+    response_model=PizzaRead,
+)
+async def add_type_to_pizza(
+    pizza_id: UUID,
+    type: int = Body(),  # noqa
+    session: AsyncSession = Depends(get_session),
+):
+    pass
+
+
+@router.delete(
+    "/{pizza_id}/types",
+    status_code=status.HTTP_200_OK,
+    response_model=PizzaRead,
+)
+async def delete_type_from_pizza(
+    pizza_id: UUID,
+    type: int = Body(),  # noqa
+    session: AsyncSession = Depends(get_session),
+):
+    pass
 
 
 @router.post(
@@ -152,10 +185,17 @@ async def create_pizza(
         pizza_id = uuid.uuid4()
         await services.add_pizza(db_session, pizza_id, pizza_dto)
         return await services.get_pizza_by_id(db_session, pizza_id)
-    except PizzaUserOrCategoryNotFoundException:
+
+    except PizzaUserNotFoundException:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="User or Category for pizza not found",
+            detail="User not found",
+        )
+
+    except PizzaCategoryNotFoundException:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Category not found",
         )
 
 

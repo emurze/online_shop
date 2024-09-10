@@ -12,13 +12,15 @@ class PizzaCreate(Schema):
     user_id: Optional[UUID] = None
     category_id: Optional[UUID] = None
     types: list[str] = []
-    sizes: list[str] = []
+    sizes: list[int] = []
 
 
 class PizzaPartialUpdate(Schema):
     title: Optional[str] = None
     description: Optional[str] = None
     price: Optional[PydanticMoney] = None
+    types: Optional[list[str]] = None
+    sizes: Optional[list[int]] = None
 
 
 class PizzaRead(Schema):
@@ -26,12 +28,12 @@ class PizzaRead(Schema):
     title: Optional[str] = None
     description: Optional[str] = None
     price: Optional[PydanticMoney] = None
-    created_at: Optional[datetime] = None
-    updated_at: Optional[datetime] = None
     sizes: Optional[list[int]] = None
     types: Optional[list[str]] = None
     user_id: Optional[UUID] = None
     category_id: Optional[UUID] = None
+    created_at: Optional[datetime] = None
+    updated_at: Optional[datetime] = None
 
 
 class PizzaPageRead(Schema):

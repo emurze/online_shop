@@ -24,7 +24,7 @@ async def create_pizzas(
 ) -> None:
     lg.info(f"{count} pizzas created")
 
-    category = PizzaCategory(id=uuid.uuid4(), title="Category 1")
+    category = PizzaCategory(id=user_id, title="Category 1")
     lg.info(f"Pizza Category added {category.id}")
 
     types = [

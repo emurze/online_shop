@@ -56,7 +56,7 @@ class AppConfig(BaseSettings):
     # Postgres
     pool_size: int = 10
     pool_max_overflow: int = 0
-    db_echo: bool = True
+    db_echo: bool = False
     db_dsn: str = "postgresql+asyncpg://postgres:password@db:5432/postgres"
     redis_dsn: str = "redis://db:6379/0"
 

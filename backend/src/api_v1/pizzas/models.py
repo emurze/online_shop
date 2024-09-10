@@ -49,11 +49,11 @@ class Pizza(Base):
     price: Mapped[Money] = mapped_column(Money)
     user: Mapped[Optional["User"]] = relationship(back_populates="pizzas")
     user_id: Mapped[Optional[uuid.UUID]] = mapped_column(ForeignKey("user.id"))
-    sizes: Mapped[list["PizzaSize"]] = relationship(
+    sizes: Mapped[set["PizzaSize"]] = relationship(
         secondary=pizza_size_association,
         back_populates="pizzas",
     )
-    types: Mapped[list["PizzaType"]] = relationship(
+    types: Mapped[set["PizzaType"]] = relationship(
         secondary=pizza_type_association,
         back_populates="pizzas",
     )
@@ -69,7 +69,7 @@ class Pizza(Base):
 
 
 class PizzaSize(Base):
-    size: Mapped[int]
+    size: Mapped[int] = mapped_column(unique=True)
     pizzas: Mapped[list["Pizza"]] = relationship(
         secondary=pizza_size_association,
         back_populates="sizes",
@@ -80,7 +80,7 @@ class PizzaSize(Base):
 
 
 class PizzaType(Base):
-    type: Mapped[str]
+    type: Mapped[str] = mapped_column(unique=True)
     pizzas: Mapped[list["Pizza"]] = relationship(
         secondary=pizza_type_association,
         back_populates="types",

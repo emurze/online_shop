@@ -2,5 +2,9 @@ class PizzaNotFoundException(Exception):
     pass
 
 
-class PizzaUserOrCategoryNotFoundException(Exception):
+class PizzaUserNotFoundException(Exception):
+    pass
+
+
+class PizzaCategoryNotFoundException(Exception):
     pass
