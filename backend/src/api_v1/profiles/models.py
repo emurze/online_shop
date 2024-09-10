@@ -13,9 +13,15 @@ if TYPE_CHECKING:
 class Profile(Base):
     first_name: Mapped[str]
     last_name: Mapped[str]
-    bio: Mapped[str]
+    bio: Mapped[Optional[str]]
     birthday: Mapped[str]
     gender: Mapped[str]
     photo_url: Mapped[Optional[str]]
-    user_id: Mapped[UUID] = mapped_column(ForeignKey("user.id"))
+    user_id: Mapped[UUID] = mapped_column(ForeignKey("user.id"), unique=True)
     user: Mapped["User"] = relationship(back_populates="profile")
+
+    def __str__(self) -> str:
+        return (
+            f"{type(self).__name__}"
+            f"(first_name={self.first_name!r}, last_name={self.last_name!r})"
+        )

@@ -1,11 +1,13 @@
+import importlib
+import logging
+import pkgutil
 import re
 import uuid
 from collections.abc import AsyncGenerator
 from datetime import datetime
+from typing import Any, cast, Optional
 
-import redis.asyncio
-from passlib.context import CryptContext
-from redis.asyncio import Redis
+from faker.utils.text import slugify
 from sqlalchemy import DateTime, func, DECIMAL
 from sqlalchemy.ext.asyncio import (
     AsyncSession,
@@ -39,10 +41,32 @@ class Base(DeclarativeBase):
         server_default=func.now(),
     )
 
+    def __repr__(self) -> str:
+        return str(self)
+
+    def as_dict(self, exclude: Optional[set] = None) -> dict:
+        exclude = exclude or set()
+        return {
+            column.name: getattr(self, column.name)
+            for column in self.__table__.columns  # type: ignore
+            if column.name not in exclude
+        }
+
 
 class DatabaseAdapter:
-    def __init__(self, db_dsn: str, echo: bool) -> None:
-        self.engine = create_async_engine(db_dsn, echo=echo)
+    def __init__(
+        self,
+        db_dsn: str,
+        echo: bool,
+        pool_size: int,
+        pool_max_overflow: int,
+    ) -> None:
+        self.engine = create_async_engine(
+            db_dsn,
+            echo=echo,
+            pool_size=pool_size,
+            max_overflow=pool_max_overflow,
+        )
         self.session_factory = async_sessionmaker(
             self.engine,
             expire_on_commit=False,
@@ -51,7 +75,33 @@ class DatabaseAdapter:
         )
 
 
-db_adapter = DatabaseAdapter(db_dsn=config.db_dsn, echo=config.db_echo)
+db_adapter = DatabaseAdapter(
+    db_dsn=config.db_dsn,
+    echo=config.db_echo,
+    pool_size=config.pool_size,
+    pool_max_overflow=config.pool_max_overflow,
+)
+
+
+def populate_base() -> None:
+    """Populates Base by models imported from entire application."""
+    lg = logging.getLogger(__name__)
+    parent_dir_name = "api_v1"
+    parent_dir = config.base_dir / parent_dir_name
+
+    if not parent_dir.exists():
+        lg.error(f"{parent_dir} does not exist")
+        return
+
+    for _, module_name, __ in pkgutil.iter_modules([str(parent_dir)]):
+        module_path = f"{parent_dir_name}.{module_name}.models"
+        try:
+            importlib.import_module(module_path)
+            lg.debug(f"Successfully imported: {module_path}")
+        except ModuleNotFoundError:
+            lg.warning(f"No models.py found in {module_name}")
+        except Exception as e:
+            lg.error(f"Error importing {module_path}: {e}")
 
 
 async def get_session() -> AsyncGenerator[AsyncSession]:
@@ -59,22 +109,60 @@ async def get_session() -> AsyncGenerator[AsyncSession]:
         yield session
 
 
-async def get_redis() -> Redis:
-    return redis.asyncio.from_url(
-        config.redis_dsn,
-        decode_responses=True,
-    )
+def make_slug(oid: uuid.UUID, title: str) -> str:
+    return slugify(f"{str(oid)[:13]}-{title}")
+
+
+def cast_any(obj: Any) -> Any:
+    return cast(Any, obj)
+
+
+def convert_filter_by(model_class: type[Base], filter_by: str) -> list:
+    """
+    # TODO: write filtering docs string
+    Convert sort string into SQLAlchemy's order_by format.
+
+    Example Input: "id:asc,name:desc"
+    Example Output: [Person.id.asc(), Person.name.desc()]
+    """
+
+    if filter_by is not None and filter_by != "null":
+        criteria = dict(x.strip().split("=") for x in filter_by.split(","))
+
+        criteria_list = []
+        for attr, value in criteria.items():
+            if _attr := getattr(model_class, attr, None):
+                if attr.endswith("id"):
+                    criteria_list.append(_attr == value)
+                else:
+                    search = f"%{value}%"
+                    criteria_list.append(_attr.ilike(search))
+
+        return criteria_list
+
+    return []
+
+
+def convert_sort_by(model_class: type[Base], sort_by: str):
+    """
+    # TODO: write sorting docs string
+    Convert sort string into SQLAlchemy's order_by format.
+
+    Example Input: "id:asc,name:desc"
+    Example Output: [Person.id.asc(), Person.name.desc()]
+    """
+
+    sort_fields = sort_by.split(",")
+    sort_criteria = []
+    for field_direction in sort_fields:
+        field, direction = field_direction.split(":")
+        if _attr := getattr(model_class, field, None):
+            if direction == "asc":
+                sort_criteria.append(_attr.asc())
+            elif direction == "desc":
+                sort_criteria.append(_attr.desc())
+
+    return sort_criteria
 
 
 Money = DECIMAL(precision=10, scale=2)
-
-
-_pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
-
-def hash_password(password: str) -> str:
-    return _pwd_context.hash(password)
-
-
-def verify_password(plain_password: str, hashed_password: str) -> bool:
-    return _pwd_context.verify(plain_password, hashed_password)

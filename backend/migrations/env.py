@@ -6,13 +6,7 @@ from sqlalchemy import pool
 from alembic import context
 
 from config import get_db_dsn_for_environment
-from main import create_app
-from shared.db import Base
-
-
-def populate_db_by_models() -> None:
-    create_app()
-
+from shared.db import Base, populate_base
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -26,7 +20,7 @@ if config.config_file_name is not None:
 db_dsn = get_db_dsn_for_environment()
 config.set_main_option("sqlalchemy.url", db_dsn + "?async_fallback=True")
 
-populate_db_by_models()
+populate_base()
 target_metadata = Base.metadata
 
 # other values from the config, defined by the needs of env.py,

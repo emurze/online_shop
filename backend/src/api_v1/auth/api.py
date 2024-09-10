@@ -1,5 +1,4 @@
 from fastapi import APIRouter
-from api_v1.auth.models import User
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 

@@ -51,20 +51,6 @@ test = ["anyio[trio]", "coverage[toml] (>=7)", "exceptiongroup (>=1.2.0)", "hypo
 trio = ["trio (>=0.23)"]
 
 [[package]]
-name = "asgiref"
-version = "3.8.1"
-description = "ASGI specs, helper code, and adapters"
-optional = false
-python-versions = ">=3.8"
-files = [
-    {file = "asgiref-3.8.1-py3-none-any.whl", hash = "sha256:3e1e3ecc849832fe52ccf2cb6686b7a55f82bb1d6aee72a58826471390335e47"},
-    {file = "asgiref-3.8.1.tar.gz", hash = "sha256:c343bd80a0bec947a9860adb4c432ffa7db769836c64238fc34bdc3fec84d590"},
-]
-
-[package.extras]
-tests = ["mypy (>=0.800)", "pytest", "pytest-asyncio"]
-
-[[package]]
 name = "asyncpg"
 version = "0.29.0"
 description = "An asyncio PostgreSQL driver"
@@ -231,26 +217,6 @@ files = [
     {file = "colorama-0.4.6-py2.py3-none-any.whl", hash = "sha256:4f1d9991f5acc0ca119f9d443620b77f9d6b33703e51011c16baf57afb285fc6"},
     {file = "colorama-0.4.6.tar.gz", hash = "sha256:08695f5cb7ed6e0531a20572697297273c47b8cae5a63ffc6d6ed5c201be6e44"},
 ]
-
-[[package]]
-name = "django"
-version = "5.1.1"
-description = "A high-level Python web framework that encourages rapid development and clean, pragmatic design."
-optional = false
-python-versions = ">=3.10"
-files = [
-    {file = "Django-5.1.1-py3-none-any.whl", hash = "sha256:71603f27dac22a6533fb38d83072eea9ddb4017fead6f67f2562a40402d61c3f"},
-    {file = "Django-5.1.1.tar.gz", hash = "sha256:021ffb7fdab3d2d388bc8c7c2434eb9c1f6f4d09e6119010bbb1694dda286bc2"},
-]
-
-[package.dependencies]
-asgiref = ">=3.8.1,<4"
-sqlparse = ">=0.3.1"
-tzdata = {version = "*", markers = "sys_platform == \"win32\""}
-
-[package.extras]
-argon2 = ["argon2-cffi (>=19.1.0)"]
-bcrypt = ["bcrypt"]
 
 [[package]]
 name = "dnspython"
@@ -1103,21 +1069,6 @@ pymysql = ["pymysql"]
 sqlcipher = ["sqlcipher3_binary"]
 
 [[package]]
-name = "sqlparse"
-version = "0.5.1"
-description = "A non-validating SQL parser."
-optional = false
-python-versions = ">=3.8"
-files = [
-    {file = "sqlparse-0.5.1-py3-none-any.whl", hash = "sha256:773dcbf9a5ab44a090f3441e2180efe2560220203dc2f8c0b0fa141e18b505e4"},
-    {file = "sqlparse-0.5.1.tar.gz", hash = "sha256:bb6b4df465655ef332548e24f08e205afc81b9ab86cb1c45657a7ff173a3a00e"},
-]
-
-[package.extras]
-dev = ["build", "hatch"]
-doc = ["sphinx"]
-
-[[package]]
 name = "starlette"
 version = "0.38.4"
 description = "The little ASGI library that shines."
@@ -1188,4 +1139,4 @@ standard = ["colorama (>=0.4)", "httptools (>=0.5.0)", "python-dotenv (>=0.13)",
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "b0569295c0ffce86b4405925f7172449ac47b4ad5f4a51cdaac040e88def63b0"
+content-hash = "817bce6879929396930aa6069fe5352a4c4db12c46b5e181db56066bd1dcd6f0"

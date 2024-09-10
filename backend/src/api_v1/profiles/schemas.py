@@ -5,6 +5,7 @@ from shared.schemas import Schema
 
 
 class ProfileRead(Schema):
+    id: UUID
     first_name: str
     last_name: str
     bio: str

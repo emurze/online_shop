@@ -9,21 +9,34 @@ class PizzaCreate(Schema):
     title: str
     description: Optional[str] = None
     price: PydanticMoney
-    user_id: None = None
+    user_id: Optional[UUID] = None
+    category_id: Optional[UUID] = None
+    types: list[str] = []
+    sizes: list[str] = []
 
 
 class PizzaPartialUpdate(Schema):
     title: Optional[str] = None
     description: Optional[str] = None
     price: Optional[PydanticMoney] = None
-    user_id: None = None
 
 
 class PizzaRead(Schema):
-    id: UUID
-    title: str
-    description: str
-    price: PydanticMoney
-    created_at: datetime
-    updated_at: datetime
-    user_id: None = None
+    id: Optional[UUID] = None
+    title: Optional[str] = None
+    description: Optional[str] = None
+    price: Optional[PydanticMoney] = None
+    created_at: Optional[datetime] = None
+    updated_at: Optional[datetime] = None
+    sizes: Optional[list[int]] = None
+    types: Optional[list[str]] = None
+    user_id: Optional[UUID] = None
+    category_id: Optional[UUID] = None
+
+
+class PizzaPageRead(Schema):
+    page_number: int
+    page_size: int
+    total_pages: int
+    total_record: int
+    content: list[PizzaRead]
