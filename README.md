@@ -27,4 +27,6 @@ bash -c "cd backend && poe up"
 
 ```git branch -D feature/new_feature``` Удалить старую ветку
 
+Нажать sync fork в github
+
 ```git pull origin master``` Получить измения с оригинального репозитория
