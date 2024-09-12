@@ -21,5 +21,5 @@ git commit -m "new code"
 
 git push -u origin "feature/new_feature"
 
-# Return new cide
+// Pull changes from github to your local project
 git pull
