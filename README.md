@@ -19,7 +19,13 @@ bash -c "cd backend && poe up"
 
 ```git commit -m "new code"``` Закомитить изменения
 
-```git push -u origin feature/new_feature``` Отправить изменения с локальной репки на github
+```git push origin feature/new_feature``` Отправить изменения с локальной репки на github
+
+```git add .``` Добавить все изменения с локалки в репозиторию ещё раз
+
+```git commit -m "new code 2"``` Закомитить ещё изменения
+
+```git push origin feature/new_feature``` Отправить изменения с локальной репки на github
 
 Сделать pull request в github для применения изменений после моего подтверждения
 
