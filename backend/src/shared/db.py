@@ -41,6 +41,9 @@ class Base(DeclarativeBase):
         server_default=func.now(),
     )
 
+    def __str__(self) -> str:
+        raise NotImplemented()
+
     def __repr__(self) -> str:
         return str(self)
 

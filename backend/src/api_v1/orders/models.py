@@ -20,7 +20,7 @@ class Order(Base):
         back_populates="order",
         cascade="all, delete",
     )
-    coupon: Mapped["Coupon"] = relationship(back_populates="orders")
+    coupon: Mapped[Optional["Coupon"]] = relationship(back_populates="orders")
     # user: Mapped["User"] = relationship(back_populates="orders")
     coupon_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("coupon.id"))
     # user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("user.id"))

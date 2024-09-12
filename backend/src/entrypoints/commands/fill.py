@@ -51,8 +51,8 @@ async def create_pizzas(
     ]
 
     for pizza in pizzas:
-        pizza.sizes.extend(sizes)
-        pizza.types.extend(types)
+        pizza.sizes.union(sizes)
+        pizza.types.union(types)
 
     session.add(category)
     session.add_all(pizzas)
