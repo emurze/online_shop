@@ -1,5 +1,7 @@
+import uuid
 from typing import TYPE_CHECKING
 
+from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, relationship, mapped_column
 
 from shared.db import Base
@@ -8,6 +10,11 @@ if TYPE_CHECKING:
     from api_v1.pizzas.models import Pizza
     from api_v1.profiles.models import Profile
     from api_v1.orders.models import Order
+
+
+class Session(Base):
+    user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("user.id"))
+    user: Mapped["User"] = relationship(back_populates="sessions")
 
 
 class User(Base):
@@ -21,6 +28,10 @@ class User(Base):
         cascade="all, delete-orphan",
     )
     pizzas: Mapped[list["Pizza"]] = relationship(
+        back_populates="user",
+        cascade="all, delete-orphan",
+    )
+    sessions: Mapped[list["Session"]] = relationship(
         back_populates="user",
         cascade="all, delete-orphan",
     )
