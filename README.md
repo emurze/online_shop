@@ -13,7 +13,7 @@ bash -c "cd backend && poe up"
 
 ```git checkout -b "feature/new_feature"```
 
->>> New Code added
+> New Code added
 
 ```git add .```
 
@@ -21,5 +21,6 @@ bash -c "cd backend && poe up"
 
 ```git push -u origin "feature/new_feature"```
 
-// Pull changes from github to your local project
+Pull changes from github to your local project
+
 ```git pull```
