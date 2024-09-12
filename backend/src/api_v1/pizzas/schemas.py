@@ -42,3 +42,8 @@ class PizzaPageRead(Schema):
     total_pages: int
     total_record: int
     content: list[PizzaRead]
+
+
+class PizzaCategoryRead(Schema):
+    id: Optional[UUID] = None
+    title: Optional[str] = None

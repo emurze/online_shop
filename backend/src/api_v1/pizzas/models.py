@@ -85,3 +85,6 @@ class PizzaType(Base):
         secondary=pizza_type_association,
         back_populates="types",
     )
+
+    def __str__(self) -> str:
+        return f"{type(self).__name__}(type={self.type!r})"

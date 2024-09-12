@@ -108,6 +108,36 @@ async def get_latest_pizza(session: AsyncSession) -> dict | NoReturn:
     return map_pizza_to_dict(latest_pizza)
 
 
+async def _get_or_create_sizes_and_types(
+    session: AsyncSession,
+    pizza_dto: PizzaPartialUpdate | PizzaCreate,
+) -> tuple[set[PizzaSize], set[PizzaType]]:
+    # Find missing sizes
+    query1 = select(PizzaSize).where(PizzaSize.size.in_(pizza_dto.sizes))
+    existing_sizes = set((await session.execute(query1)).scalars())
+    existing_size_values = {size.size for size in existing_sizes}
+    missing_size_values = set(pizza_dto.sizes) - existing_size_values
+
+    # Create missing sizes
+    new_sizes = {PizzaSize(size=size) for size in missing_size_values}
+    session.add_all(new_sizes)
+    sizes = existing_sizes.union(new_sizes)
+
+    # Find missing types
+    query2 = select(PizzaType).where(PizzaType.type.in_(pizza_dto.types))
+    existing_types = set((await session.execute(query2)).scalars())
+    existing_type_values = {type_.type for type_ in existing_types}
+    missing_type_values = set(pizza_dto.types) - existing_type_values
+
+    # Create missing types
+    new_types = {PizzaType(type=type_) for type_ in missing_type_values}
+    session.add_all(new_types)
+    types = existing_types.union(new_types)
+
+    return sizes, types
+
+
+
 async def add_pizza(
     session: AsyncSession,
     pizza_id: UUID,
@@ -125,27 +155,7 @@ async def add_pizza(
         if not category:
             raise PizzaCategoryNotFoundException()
 
-    # Find missing sizes
-    query1 = select(PizzaSize).where(PizzaSize.size.in_(pizza_dto.sizes))
-    existing_sizes = list((await session.execute(query1)).scalars())
-    existing_size_values = {size.size for size in existing_sizes}
-    missing_size_values = set(pizza_dto.sizes) - existing_size_values
-
-    # Create missing sizes
-    new_sizes = [PizzaSize(size=size) for size in missing_size_values]
-    session.add_all(new_sizes)
-    sizes = existing_sizes + new_sizes
-
-    # Find missing types
-    query2 = select(PizzaType).where(PizzaType.type.in_(pizza_dto.types))
-    existing_types = list((await session.execute(query2)).scalars())
-    existing_type_values = {type_.type for type_ in existing_types}
-    missing_type_values = set(pizza_dto.types) - existing_type_values
-
-    # Create missing types
-    new_types = [PizzaType(type=type_) for type_ in missing_type_values]
-    session.add_all(new_types)
-    types = existing_types + new_types
+    sizes, types = await _get_or_create_sizes_and_types(session, pizza_dto)
 
     # Create pizza
     pizza = Pizza(
@@ -171,7 +181,14 @@ async def update_pizza(
     pizza: Pizza,
     pizza_dto: PizzaPartialUpdate,
 ) -> None:
-    print(pizza)
+    sizes, types = await _get_or_create_sizes_and_types(session, pizza_dto)
+
     for name, value in pizza_dto.model_dump(exclude_unset=True).items():
-        setattr(pizza, name, value)
+        if name == "sizes":
+            setattr(pizza, name, sizes)
+        elif name == "types":
+            setattr(pizza, name, types)
+        else:
+            setattr(pizza, name, value)
+
     await session.commit()
