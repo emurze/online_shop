@@ -9,38 +9,22 @@ bash -c "cd backend && poe up"
 
 ### How to contribute?
 
-Склонировать репку на локальную машину
-```git clone git@github.com:emurze/online_shop.git```
+```git clone git@github.com:emurze/online_shop.git``` Склонировать репку на локальную машину
 
-Создать и перейти на новую ветку
-```git checkout -b feature/new_feature```
+```git checkout -b feature/new_feature``` Создать и перейти на новую ветку
 
-> Add new code
+... Добавить новый код ...
 
-Добавить все изменения с локалки в репозиторию
-```git add .```
+```git add .``` Добавить все изменения с локалки в репозиторию
 
-Закомитить изменения
-```git commit -m "new code"```
+```git commit -m "new code"``` Закомитить изменения
 
-Запушить изменения с локальной репки на github
-```git push -u origin feature/new_feature```
+```git push -u origin feature/new_feature``` Отправить изменения с локальной репки на github
 
-> Сделать pull request в github для применения изменений после моего подтверждения
-> Make pull request in github
+Сделать pull request в github для применения изменений после моего подтверждения
 
-Перейти на основную ветку
-```git checkout master```
+```git checkout master``` Перейти на основную ветку
 
-Удалить старую ветку
-```git branch -D feature/new_feature```
+```git branch -D feature/new_feature``` Удалить старую ветку
 
-Получить измения с оригинального репозитория
-```git pull origin master```
-
-
-
-
-Pull changes from github to your local project
-
-```git pull origin master```
+```git pull origin master``` Получить измения с оригинального репозитория
