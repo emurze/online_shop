@@ -1,6 +1,6 @@
 import asyncio
-import logging
 
+import logging
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from entrypoints.commands._base import db_command

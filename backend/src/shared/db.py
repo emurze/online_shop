@@ -59,13 +59,13 @@ class Base(DeclarativeBase):
 class DatabaseAdapter:
     def __init__(
         self,
-        db_dsn: str,
+        dsn: str,
         echo: bool,
         pool_size: int,
         pool_max_overflow: int,
     ) -> None:
         self.engine = create_async_engine(
-            db_dsn,
+            dsn,
             echo=echo,
             pool_size=pool_size,
             max_overflow=pool_max_overflow,
@@ -79,25 +79,24 @@ class DatabaseAdapter:
 
 
 db_adapter = DatabaseAdapter(
-    db_dsn=config.db_dsn,
-    echo=config.db_echo,
-    pool_size=config.pool_size,
-    pool_max_overflow=config.pool_max_overflow,
+    dsn=config.db.dsn,
+    echo=config.db.echo,
+    pool_size=config.db.pool_size,
+    pool_max_overflow=config.db.pool_max_overflow,
 )
 
 
 def populate_base() -> None:
     """Populates Base by models imported from entire application."""
     lg = logging.getLogger(__name__)
-    parent_dir_name = "api_v1"
-    parent_dir = config.base_dir / parent_dir_name
+    modules_dir = config.modules_dir
 
-    if not parent_dir.exists():
-        lg.error(f"{parent_dir} does not exist")
+    if not modules_dir.exists():
+        lg.error(f"{modules_dir} does not exist")
         return
 
-    for _, module_name, __ in pkgutil.iter_modules([str(parent_dir)]):
-        module_path = f"{parent_dir_name}.{module_name}.models"
+    for _, module_name, __ in pkgutil.iter_modules([str(modules_dir)]):
+        module_path = f"{config.modules_dir_name}.{module_name}.models"
         try:
             importlib.import_module(module_path)
             lg.debug(f"Successfully imported: {module_path}")
@@ -121,14 +120,7 @@ def cast_any(obj: Any) -> Any:
 
 
 def convert_filter_by(model_class: type[Base], filter_by: str) -> list:
-    """
-    # TODO: write filtering docs string
-    Convert sort string into SQLAlchemy's order_by format.
-
-    Example Input: "id:asc,name:desc"
-    Example Output: [Person.id.asc(), Person.name.desc()]
-    """
-
+    """TODO: write input / output docs"""
     if filter_by is not None and filter_by != "null":
         criteria = dict(x.strip().split("=") for x in filter_by.split(","))
 
@@ -147,14 +139,7 @@ def convert_filter_by(model_class: type[Base], filter_by: str) -> list:
 
 
 def convert_sort_by(model_class: type[Base], sort_by: str):
-    """
-    # TODO: write sorting docs string
-    Convert sort string into SQLAlchemy's order_by format.
-
-    Example Input: "id:asc,name:desc"
-    Example Output: [Person.id.asc(), Person.name.desc()]
-    """
-
+    """TODO: write input / output docs"""
     sort_fields = sort_by.split(",")
     sort_criteria = []
     for field_direction in sort_fields:
