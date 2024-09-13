@@ -6,6 +6,6 @@ from config import config
 
 async def get_redis() -> Redis:
     return redis.asyncio.from_url(
-        config.redis_dsn,
+        config.redis.dsn,
         decode_responses=True,
     )

@@ -14,6 +14,7 @@ RUN pip install poetry
 RUN poetry config virtualenvs.create false
 RUN poetry install --no-interaction --no-ansi
 
+COPY certs certs
 COPY migrations migrations
 COPY src src
 COPY tests tests

@@ -4,7 +4,8 @@ from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 
 from api_v1 import router as api_v1_router
-from config import AppConfig, configure_logging
+from config import AppConfig
+from log_config import configure_logging
 
 
 def create_app(config: AppConfig = AppConfig()) -> FastAPI:

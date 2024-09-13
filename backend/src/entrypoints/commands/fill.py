@@ -1,8 +1,8 @@
 import asyncio
-import logging
 import uuid
 from typing import Optional
 
+import logging
 from faker import Faker
 from sqlalchemy.ext.asyncio import AsyncSession
 
