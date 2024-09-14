@@ -7,6 +7,7 @@ from pydantic_settings import SettingsConfigDict, BaseSettings
 from log_config import LogLevel
 
 BASE_DIR: Path = Path(__file__).parent
+BASE_DIR_PARENT: Path = BASE_DIR.parent
 
 
 class DatabaseConfig(BaseModel):
@@ -21,9 +22,11 @@ class RedisConfig(BaseModel):
 
 
 class AuthJWTConfig(BaseModel):
-    certs_dir: Path = BASE_DIR.parent / "certs"
-    private_key_path: Path = certs_dir / "jwt-private.pem"
-    public_key_path: Path = certs_dir / "jwt-public.pem"
+    private_key_path: Path = BASE_DIR_PARENT / "certs" / "jwt-private.pem"
+    public_key_path: Path = BASE_DIR_PARENT / "certs" / "jwt-public.pem"
+    algorithm: str = "RS256"
+    access_token_expire_minutes: int = 15
+    refresh_token_expire_days: int = 30
 
 
 class AppConfig(BaseSettings):
