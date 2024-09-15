@@ -2,8 +2,8 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
 
-from api_v1.pizzas import services
-from api_v1.pizzas.schemas import PizzaCategoryRead
+from _spicking.pizzas import services
+from _spicking.pizzas.schemas import PizzaCategoryRead
 from shared.db import get_session
 
 category_router = APIRouter(prefix="/categories")

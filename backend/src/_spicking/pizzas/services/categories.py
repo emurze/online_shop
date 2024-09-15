@@ -1,7 +1,7 @@
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from api_v1.pizzas.models import PizzaCategory
+from _spicking.pizzas.models import PizzaCategory
 
 
 async def get_pizzas_categories(session: AsyncSession) -> list[PizzaCategory]:

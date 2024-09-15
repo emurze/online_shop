@@ -9,22 +9,24 @@ from sqlalchemy.ext.asyncio import (
     AsyncSession,
 )
 
-from config import AppConfig
+from config import Config, ApiConfig, DatabaseConfig
 from main import create_app
 from shared.db import Base
 
 
 @pytest.fixture(scope="function")
-def config() -> AppConfig:
-    return AppConfig(
-        title="Test",
-        db_dsn="postgresql+asyncpg://postgres:password@test_db:5432/postgres",
+def config() -> Config:
+    return Config(
+        api=ApiConfig(title="Test"),
+        db=DatabaseConfig(
+            dsn="postgresql+asyncpg://postgres:password@test_db:5432/postgres"
+        ),
     )
 
 
 @pytest.fixture(scope="function")
-async def engine(config: AppConfig) -> AsyncEngine:
-    eng = create_async_engine(config.db_dsn, poolclass=NullPool)
+async def engine(config: Config) -> AsyncEngine:
+    eng = create_async_engine(config.db.dsn, poolclass=NullPool)
 
     async with eng.begin() as conn:
         await conn.run_sync(Base.metadata.drop_all)
@@ -40,7 +42,7 @@ async def db_session(engine: AsyncEngine) -> AsyncSession:
 
 
 @pytest.fixture(scope="function")
-async def api_client(config: AppConfig) -> AsyncClient:
+async def api_client(config: Config) -> AsyncClient:
     api: Any = create_app(config)
 
     async with AsyncClient(

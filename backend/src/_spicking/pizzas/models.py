@@ -4,11 +4,11 @@ from typing import Optional, TYPE_CHECKING
 from sqlalchemy import ForeignKey, TEXT, String, Table, Column, UUID
 from sqlalchemy.orm import mapped_column, Mapped, relationship
 
-from shared.db import Base, Money
+from shared.db import Base
+from shared.db_utils import Money
 
 if TYPE_CHECKING:
     from api_v1.auth.models import User
-
 
 pizza_size_association = Table(
     "pizza_size_association",

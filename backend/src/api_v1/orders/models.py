@@ -1,14 +1,13 @@
 import uuid
-from typing import TYPE_CHECKING, Optional
+from typing import Optional
 
 from pydantic import PositiveInt
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-
+from typing_extensions import TYPE_CHECKING
 from shared.db import Base
 
 if TYPE_CHECKING:
-    from api_v1.coupons.models import Coupon
     from api_v1.auth.models import User
 
 
@@ -20,14 +19,11 @@ class Order(Base):
         back_populates="order",
         cascade="all, delete",
     )
-    coupon: Mapped[Optional["Coupon"]] = relationship(back_populates="orders")
     # user: Mapped["User"] = relationship(back_populates="orders")
-    coupon_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("coupon.id"))
     # user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("user.id"))
 
 
 class OrderItem(Base):
-    # count
     quantity: Mapped[PositiveInt]
     order: Mapped["Order"] = relationship(
         "Order",
@@ -35,4 +31,3 @@ class OrderItem(Base):
         cascade="all, delete",
     )
     order_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("order.id"))
-    pizza_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("pizza.id"))

@@ -6,22 +6,22 @@ from fastapi import APIRouter, Query, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
 
-from api_v1.pizzas import services
-from api_v1.pizzas.api.categories import category_router
+from _spicking.pizzas import services
+from _spicking.pizzas.api.categories import category_router
 
 
-from api_v1.pizzas.exceptions import (
+from _spicking.pizzas.exceptions import (
     PizzaNotFoundException,
     PizzaCategoryNotFoundException,
     PizzaUserNotFoundException,
 )
-from api_v1.pizzas.schemas import (
+from _spicking.pizzas.schemas import (
     PizzaPageRead,
     PizzaRead,
     PizzaPartialUpdate,
     PizzaCreate,
 )
-from api_v1.pizzas.services import map_pizza_to_dict
+from _spicking.pizzas.services import map_pizza_to_dict
 from shared.db import get_session
 from shared.schemas import ErrorSchema
 

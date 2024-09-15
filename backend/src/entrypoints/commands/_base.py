@@ -1,15 +1,14 @@
 from collections.abc import Callable
 
-from config import get_db_dsn_for_environment, AppConfig, LogLevel
-from log_config import configure_logging
+from config import get_db_dsn_for_environment, configure_logging, Config
 from shared.db import DatabaseAdapter, populate_base
 
 
 async def db_command(
     command: Callable,
-    config: AppConfig = AppConfig(),
+    config: Config = Config(),
 ) -> None:
-    configure_logging(LogLevel.info, False)
+    configure_logging(config)
     db_dsn = get_db_dsn_for_environment(config)
     db_adapter = DatabaseAdapter(
         dsn=db_dsn,

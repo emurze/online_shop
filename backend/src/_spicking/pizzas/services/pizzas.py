@@ -7,17 +7,17 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
 from api_v1.auth.models import User
-from api_v1.pizzas.exceptions import (
+from _spicking.pizzas.exceptions import (
     PizzaNotFoundException,
     PizzaUserNotFoundException,
     PizzaCategoryNotFoundException,
 )
-from api_v1.pizzas.models import Pizza, PizzaCategory, PizzaSize, PizzaType
-from api_v1.pizzas.schemas import (
+from _spicking.pizzas.models import Pizza, PizzaCategory, PizzaSize, PizzaType
+from _spicking.pizzas.schemas import (
     PizzaCreate,
     PizzaPartialUpdate,
 )
-from shared.db import convert_filter_by, convert_sort_by
+from shared.db_filters_sorts import convert_filter_by, convert_sort_by
 
 
 def get_options() -> list:
@@ -135,7 +135,6 @@ async def _get_or_create_sizes_and_types(
     types = existing_types.union(new_types)
 
     return sizes, types
-
 
 
 async def add_pizza(
