@@ -5,7 +5,7 @@ from sqlalchemy import pool
 
 from alembic import context
 
-from config import get_db_dsn_for_environment
+from config import get_db_dsn_for_environment, Config
 from shared.db import Base, populate_base
 
 # this is the Alembic Config object, which provides
@@ -17,7 +17,7 @@ config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-db_dsn = get_db_dsn_for_environment()
+db_dsn = get_db_dsn_for_environment(Config())
 config.set_main_option("sqlalchemy.url", db_dsn + "?async_fallback=True")
 
 populate_base()

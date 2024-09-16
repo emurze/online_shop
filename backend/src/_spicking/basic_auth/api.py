@@ -39,7 +39,7 @@
 #
 #
 # async def get_username_by_token(
-#     static_token: str = Header(alias="x-auth-token"),
+#     static_token: str = Header(alias="x-jwt_auth-token"),
 # ) -> str:
 #     if username := static_token_map.get(static_token):
 #         return username

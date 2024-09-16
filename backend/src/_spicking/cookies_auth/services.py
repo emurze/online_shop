@@ -4,14 +4,14 @@
 # from sqlalchemy import select, exists, delete
 # from sqlalchemy.ext.asyncio import AsyncSession
 #
-# from api_v1.auth.exceptions import (
+# from api_v1.jwt_auth.exceptions import (
 #     UserNotFoundException,
 #     UserEmailAlwaysExistsException,
 #     UserNameAlwaysExistsException,
 #     UserNotAuthenticatedException,
 # )
-# from api_v1.auth.models import User, Session
-# from api_v1.auth.schemas import UserCreate
+# from api_v1.jwt_auth.models import User, Session
+# from api_v1.jwt_auth.schemas import UserCreate
 # from shared.db import cast_any as _
 # from shared.hasher import hash_password
 #

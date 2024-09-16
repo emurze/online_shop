@@ -3,15 +3,15 @@ import uuid
 from typing import Optional
 
 import logging
+
 from faker import Faker
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from api_v1.auth.models import User
-from api_v1.pizzas.models import Pizza, PizzaSize, PizzaType, PizzaCategory
+from _spicking.pizzas import Pizza, PizzaSize, PizzaType, PizzaCategory
 from api_v1.profiles.models import Profile
 from entrypoints.commands._base import db_command
 from entrypoints.commands.clear import clear_db
-from shared.hasher import hash_password
 
 lg = logging.getLogger(__name__)
 

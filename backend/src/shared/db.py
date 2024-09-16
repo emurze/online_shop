@@ -5,10 +5,10 @@ import re
 import uuid
 from collections.abc import AsyncGenerator
 from datetime import datetime
-from typing import Any, cast, Optional
+from functools import lru_cache
+from typing import Optional
 
-from faker.utils.text import slugify
-from sqlalchemy import DateTime, func, DECIMAL
+from sqlalchemy import DateTime, func, MetaData
 from sqlalchemy.ext.asyncio import (
     AsyncSession,
     create_async_engine,
@@ -21,7 +21,7 @@ from sqlalchemy.orm import (
     mapped_column,
 )
 
-from config import config
+from config import app_config, MODULES_DIR, Config
 
 
 class Base(DeclarativeBase):
@@ -30,6 +30,7 @@ class Base(DeclarativeBase):
         """Convert CamelCase to snake_case"""
         return re.sub(r"(?<!^)(?=[A-Z])", "_", cls.__name__).lower()
 
+    metadata = MetaData(naming_convention=app_config.db.naming_convention)
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
@@ -77,26 +78,21 @@ class DatabaseAdapter:
             autocommit=False,
         )
 
-
-db_adapter = DatabaseAdapter(
-    dsn=config.db.dsn,
-    echo=config.db.echo,
-    pool_size=config.db.pool_size,
-    pool_max_overflow=config.db.pool_max_overflow,
-)
+    async def dispose(self) -> None:
+        await self.engine.dispose()
 
 
 def populate_base() -> None:
     """Populates Base by models imported from entire application."""
     lg = logging.getLogger(__name__)
-    modules_dir = config.modules_dir
+    modules_dir_name = MODULES_DIR.name
 
-    if not modules_dir.exists():
-        lg.error(f"{modules_dir} does not exist")
+    if not MODULES_DIR.exists():
+        lg.error(f"{MODULES_DIR} does not exist")
         return
 
-    for _, module_name, __ in pkgutil.iter_modules([str(modules_dir)]):
-        module_path = f"{config.modules_dir_name}.{module_name}.models"
+    for _, module_name, __ in pkgutil.iter_modules([str(MODULES_DIR)]):
+        module_path = f"{modules_dir_name}.{module_name}.models"
         try:
             importlib.import_module(module_path)
             lg.debug(f"Successfully imported: {module_path}")
@@ -106,51 +102,21 @@ def populate_base() -> None:
             lg.error(f"Error importing {module_path}: {e}")
 
 
+def get_db_adapter(config: Config = app_config) -> DatabaseAdapter:
+    return DatabaseAdapter(
+        dsn=config.db.dsn,
+        echo=config.db.echo,
+        pool_size=config.db.pool_size,
+        pool_max_overflow=config.db.pool_max_overflow,
+    )
+
+
+@lru_cache(maxsize=1)
+def _get_db_adapter() -> DatabaseAdapter:
+    return get_db_adapter()
+
+
 async def get_session() -> AsyncGenerator[AsyncSession]:
+    db_adapter = _get_db_adapter()
     async with db_adapter.session_factory() as session:
         yield session
-
-
-def make_slug(oid: uuid.UUID, title: str) -> str:
-    return slugify(f"{str(oid)[:13]}-{title}")
-
-
-def cast_any(obj: Any) -> Any:
-    return cast(Any, obj)
-
-
-def convert_filter_by(model_class: type[Base], filter_by: str) -> list:
-    """TODO: write input / output docs"""
-    if filter_by is not None and filter_by != "null":
-        criteria = dict(x.strip().split("=") for x in filter_by.split(","))
-
-        criteria_list = []
-        for attr, value in criteria.items():
-            if _attr := getattr(model_class, attr, None):
-                if attr.endswith("id"):
-                    criteria_list.append(_attr == value)
-                else:
-                    search = f"%{value}%"
-                    criteria_list.append(_attr.ilike(search))
-
-        return criteria_list
-
-    return []
-
-
-def convert_sort_by(model_class: type[Base], sort_by: str):
-    """TODO: write input / output docs"""
-    sort_fields = sort_by.split(",")
-    sort_criteria = []
-    for field_direction in sort_fields:
-        field, direction = field_direction.split(":")
-        if _attr := getattr(model_class, field, None):
-            if direction == "asc":
-                sort_criteria.append(_attr.asc())
-            elif direction == "desc":
-                sort_criteria.append(_attr.desc())
-
-    return sort_criteria
-
-
-Money = DECIMAL(precision=10, scale=2)

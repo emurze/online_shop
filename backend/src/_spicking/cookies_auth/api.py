@@ -17,7 +17,7 @@
 # from .models import User
 # from .schemas import UserCreate, UserRead, UserLogin
 #
-# router = APIRouter(prefix="/auth", tags=["auth"])
+# router = APIRouter(prefix="/jwt_auth", tags=["jwt_auth"])
 # COOKIE_SESSION_ID_KEY = "app-session-id"
 #
 #
