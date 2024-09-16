@@ -4,7 +4,6 @@ from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 
 from api_v1 import router as api_v1_router
-from api_v1.auth.backend import fastapi_users, authentication_backend
 from config import Config, configure_logging, app_config
 from shared.db import get_db_adapter
 
